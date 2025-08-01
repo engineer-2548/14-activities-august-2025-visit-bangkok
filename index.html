@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>14 กิจกรรมน่าไป | 2-8 ส.ค. 68 | Visit Bangkok</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Noto Sans Thai', sans-serif;
+        }
+        
+        /* Custom Animations */
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes slideInFromBottom {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .bounce-animation {
+            animation: bounce 2s infinite;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Blob Animation */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        
+        .blob {
+            animation: blob 7s infinite;
+        }
+        
+        /* Loading Skeleton */
+        @keyframes skeleton {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+        }
+        
+        .skeleton {
+            background-color: #e2e5e7;
+            background-image: linear-gradient(90deg, #e2e5e7, #f0f3f5, #e2e5e7);
+            background-size: 200px 100%;
+            background-repeat: no-repeat;
+            animation: skeleton 1.2s ease-in-out infinite;
+        }
+        
+        /* Search Bar Animation */
+        .search-bar:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Tag Pills */
+        .tag-pill {
+            transition: all 0.3s ease;
+        }
+        
+        .tag-pill:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen transition-colors duration-500 bg-gray-50 dark:bg-gray-900" id="body">
+    <!-- Loading Screen -->
+    <div id="loader" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-[100] transition-opacity duration-500">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-gray-600 dark:text-gray-300">กำลังโหลด...</p>
+        </div>
+    </div>
+    
+    <!-- Dark Mode Toggle -->
+    <button id="darkModeToggle" class="fixed top-4 right-4 z-50 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group">
+        <i class="fas fa-moon text-gray-800 dark:text-yellow-400 group-hover:rotate-180 transition-transform duration-500"></i>
+    </button>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-md z-40 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold gradient-text">Visit Bangkok</h1>
+                <div class="flex space-x-4">
+                    <a href="#activities" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors">กิจกรรม</a>
+                    <a href="#map" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors">แผนที่</a>
+                    <a href="#contact" class="text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors">ติดต่อ</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center gradient-bg overflow-hidden mt-16">
+        <!-- Animated Blobs -->
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 blob"></div>
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 blob" style="animation-delay: 2s;"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 blob" style="animation-delay: 4s;"></div>
+        
+        <!-- Main Content -->
+        <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
+            <div class="mb-8" data-aos="zoom-in">
+                <img src="https://lh5.googleusercontent.com/d/1AgRKeq5hgbc46TJoOQelgelsYBIpG9zQ" 
+                     alt="14 กิจกรรมน่าไป" 
+                     class="mx-auto rounded-2xl shadow-2xl max-w-full h-auto bounce-animation"
+                     style="max-width: 600px;">
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-6" data-aos="fade-up">
+                14 กิจกรรมน่าไป
+            </h1>
+            
+            <p class="text-2xl md:text-3xl text-white/90 mb-4" data-aos="fade-up" data-aos-delay="100">
+                2 - 8 สิงหาคม 2568
+            </p>
+            
+            <p class="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+                ชวนคนกรุงเทพฯออกมาใช้ชีวิตร่วมกันในพื้นที่สาธารณะ<br>
+                กับ 14 กิจกรรมทั่วกรุงเทพมหานคร
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="300">
+                <a href="#activities" class="bg-white text-gray-800 font-bold py-4 px-8 rounded-full hover:bg-gray-100 transform hover:scale-110 transition-all duration-300 shadow-lg">
+                    ดูกิจกรรมทั้งหมด <i class="fas fa-arrow-down ml-2"></i>
+                </a>
+                <a href="https://visit.bangkok.go.th/th/festival-calendar" target="_blank" class="bg-transparent border-2 border-white text-white font-bold py-4 px-8 rounded-full hover:bg-white hover:text-gray-800 transform hover:scale-110 transition-all duration-300">
+                    Visit Bangkok <i class="fas fa-external-link-alt ml-2"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+    
+    <!-- Filter Section -->
+    <section class="py-8 bg-white dark:bg-gray-800 sticky top-16 z-30 shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <!-- Search Bar -->
+                <div class="relative w-full md:w-1/2 search-bar transition-all duration-300">
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="ค้นหากิจกรรม..." 
+                           class="w-full px-4 py-3 pr-10 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+                
+                <!-- Date Filter Pills -->
+                <div class="flex gap-2 overflow-x-auto pb-2 md:pb-0">
+                    <button class="tag-pill px-4 py-2 rounded-full bg-blue-500 text-white font-medium whitespace-nowrap" data-date="all">
+                        ทั้งหมด
+                    </button>
+                    <button class="tag-pill px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap hover:bg-blue-500 hover:text-white" data-date="1">
+                        1 ส.ค.
+                    </button>
+                    <button class="tag-pill px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap hover:bg-blue-500 hover:text-white" data-date="2">
+                        2 ส.ค.
+                    </button>
+                    <button class="tag-pill px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium whitespace-nowrap hover:bg-blue-500 hover:text-white" data-date="3">
+                        3 ส.ค.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Activities Section -->
+    <section id="activities" class="py-16 bg-gray-50 dark:bg-gray-900">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-white" data-aos="fade-up">
+                <i class="fas fa-calendar-check mr-2 text-blue-500"></i> กิจกรรมทั้งหมด
+            </h2>
+            
+            <div id="activitiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Activities will be dynamically inserted here -->
+            </div>
+            
+            <!-- No Results Message -->
+            <div id="noResults" class="hidden text-center py-12">
+                <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                <p class="text-xl text-gray-500 dark:text-gray-400">ไม่พบกิจกรรมที่ค้นหา</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Map Section -->
+    <section id="map" class="py-16 bg-white dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center mb-12 text-gray-800 dark:text-white" data-aos="fade-up">
+                <i class="fas fa-map-marked-alt mr-2 text-green-500"></i> แผนที่กิจกรรม
+            </h2>
+            <div class="glass rounded-2xl p-8 max-w-4xl mx-auto text-center" data-aos="zoom-in">
+                <i class="fas fa-map text-6xl text-blue-500 mb-4"></i>
+                <p class="text-lg text-gray-600 dark:text-gray-300">
+                    กิจกรรมกระจายอยู่ทั่วกรุงเทพมหานคร<br>
+                    คลิกที่บัตรกิจกรรมเพื่อดูรายละเอียดและสถานที่
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="py-16 gradient-bg">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-8" data-aos="fade-up">
+                พร้อมออกไปสนุกกับกิจกรรมแล้วหรือยัง?
+            </h2>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center" data-aos="fade-up" data-aos-delay="100">
+                <a href="https://visit.bangkok.go.th/th/festival-calendar" 
+                   target="_blank" 
+                   class="bg-white text-gray-800 font-bold py-4 px-8 rounded-full hover:bg-gray-100 transform hover:scale-110 transition-all duration-300 shadow-lg">
+                    ดูกิจกรรมเพิ่มเติม <i class="fas fa-external-link-alt ml-2"></i>
+                </a>
+                <a href="https://www.facebook.com/share/1ZWC8ZXGP3/" 
+                   target="_blank" 
+                   class="bg-blue-600 text-white font-bold py-4 px-8 rounded-full hover:bg-blue-700 transform hover:scale-110 transition-all duration-300 shadow-lg">
+                    <i class="fab fa-facebook-f mr-2"></i> ติดตามบน Facebook
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">Visit Bangkok</h3>
+                    <p class="text-gray-400">
+                        ชวนคนกรุงเทพฯออกมาใช้ชีวิตร่วมกัน<br>
+                        ในพื้นที่สาธารณะทั่วกรุงเทพมหานคร
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">ติดต่อเรา</h4>
+                    <div class="space-y-2 text-gray-400">
+                        <p><i class="fas fa-globe mr-2"></i> visit.bangkok.go.th</p>
+                        <p><i class="fab fa-facebook mr-2"></i> Facebook: Visit Bangkok</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">แฮชแท็ก</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">#กิจกรรมสัปดาห์นี้</span>
+                        <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">#วันหยุดไปไหนดี</span>
+                        <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">#เที่ยวกทม</span>
+                        <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">#Visitบางกอก</span>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2024 Visit Bangkok - 14 กิจกรรมน่าไป</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transform hover:scale-110 transition-all duration-300 opacity-0 invisible">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- JavaScript -->
+    <script>
+        // Activities Data
+        const activities = [
+            {
+                id: 1,
+                title: "ตะลักเกี้ยะ x บางกะเจ้าเข้าเมือง",
+                date: "2-3 ส.ค.",
+                location: "ท่าน้ำภาณุรังษี",
+                icon: "fa-ship",
+                color: "bg-blue-500",
+                tags: ["2", "3"],
+                description: "กิจกรรมริมน้ำสุดพิเศษ"
+            },
+            {
+                id: 2,
+                title: "เดินทอดน่อง ล่องนที ยลของดีที่ดุสิต",
+                date: "3 ส.ค.",
+                location: "วัดเทวราชกุญชรวรวิหาร",
+                icon: "fa-walking",
+                color: "bg-green-500",
+                tags: ["3"],
+                description: "ท่องเที่ยวย่านดุสิต"
+            },
+            {
+                id: 3,
+                title: "SAMA Garden MOVIE NIGHT",
+                date: "1-3 ส.ค.",
+                location: "SAMA Garden at BITEC BURI",
+                icon: "fa-film",
+                color: "bg-purple-500",
+                tags: ["1", "2", "3"],
+                description: "ดูหนังกลางแจ้ง"
+            },
+            {
+                id: 4,
+                title: "Healthy Rally สุข(ภาวะ)บุกเมือง",
+                date: "3 ส.ค.",
+                location: "ย่านหัวลำโพง",
+                icon: "fa-heartbeat",
+                color: "bg-red-500",
+                tags: ["3"],
+                description: "กิจกรรมเพื่อสุขภาพ"
+            },
+            {
+                id: 5,
+                title: "Hello : Song Wat pop-up market",
+                date: "1-3 ส.ค.",
+                location: "ลานจอดรถช้าง ทรงวาด",
+                icon: "fa-shopping-bag",
+                color: "bg-yellow-500",
+                tags: ["1", "2", "3"],
+                description: "ตลาดนัดสุดฮิป"
+            },
+            {
+                id: 6,
+                title: "Room tour",
+                date: "2-31 ส.ค.",
+                location: "GalileOasis",
+                icon: "fa-home",
+                color: "bg-indigo-500",
+                tags: ["2", "3"],
+                description: "ชมห้องพักสุดพิเศษ"
+            },
+            {
+                id: 7,
+                title: "Biblio Homemade Vol.2",
+                date: "1-3 ส.ค. 10.00-19.00",
+                location: "Slowcombo",
+                icon: "fa-book",
+                color: "bg-pink-500",
+                tags: ["1", "2", "3"],
+                description: "งานหนังสือและคาเฟ่"
+            },
+            {
+                id: 8,
+                title: "เยือนฮารูณ ชิมฮาลาล Haroon Food Market",
+                date: "2 ส.ค. 9.00-18.00",
+                location: "ชุมชนมัสยิดฮารูณ",
+                icon: "fa-utensils",
+                color: "bg-orange-500",
+                tags: ["2"],
+                description: "อาหารฮาลาลอร่อย"
+            },
+            {
+                id: 9,
+                title: "Pantomine in Bangkok 17",
+                date: "2-3 ส.ค.",
+                location: "หอประชุมเมืองไทยประกันชีวิต",
+                icon: "fa-theater-masks",
+                color: "bg-teal-500",
+                tags: ["2", "3"],
+                description: "การแสดงละครใบ้"
+            },
+            {
+                id: 10,
+                title: "เท่าหรือเทียม: เส้นทางความเหลื่อมล้ำ คนจนเมือง",
+                date: "15-3 ส.ค.",
+                location: "BACC",
+                icon: "fa-users",
+                color: "bg-gray-600",
+                tags: ["3"],
+                description: "นิทรรศการศิลปะ"
+            },
+            {
+                id: 11,
+                title: "Thonburi Café 2025 : Layers of Flavor",
+                date: "23 ก.ค. - 3 ส.ค.",
+                location: "SEACON BANGKAE HALL",
+                icon: "fa-coffee",
+                color: "bg-amber-600",
+                tags: ["1", "2", "3"],
+                description: "งานคาเฟ่ธนบุรี"
+            },
+            {
+                id: 12,
+                title: "มหกรรมนิยายนานาชาติ 2025",
+                date: "25 ก.ค. - 3 ส.ค.",
+                location: "สามย่านมิตรทาวน์ฮอลล์",
+                icon: "fa-book-open",
+                color: "bg-emerald-500",
+                tags: ["1", "2", "3"],
+                description: "งานหนังสือนานาชาติ"
+            },
+            {
+                id: 13,
+                title: "Move Breathe Heal",
+                date: "2 ส.ค. 6.30",
+                location: "ลานอัฒจันทร์กลาง สวนเบญจกิติ",
+                icon: "fa-spa",
+                color: "bg-cyan-500",
+                tags: ["2"],
+                description: "โยคะและสมาธิ"
+            },
+            {
+                id: 14,
+                title: "Sabai Sunday Run",
+                date: "3 ส.ค. 7.30",
+                location: "% Arabica Bangkok QSNCC",
+                icon: "fa-running",
+                color: "bg-lime-500",
+                tags: ["3"],
+                description: "วิ่งเช้าวันอาทิตย์"
+            }
+        ];
+        
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+        
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.getElementById('body');
+        const icon = darkModeToggle.querySelector('i');
+        
+        // Load dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            body.classList.add('dark');
+            document.documentElement.classList.add('dark');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+        
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            document.documentElement.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+        
+        // Render Activities
+        function renderActivities(filteredActivities = activities) {
+            const grid = document.getElementById('activitiesGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (filteredActivities.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+                return;
+            }
+            
+            noResults.classList.add('hidden');
+            grid.innerHTML = filteredActivities.map((activity, index) => `
+                <div class="card-hover bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden" 
+                     data-aos="fade-up" 
+                     data-aos-delay="${index * 50}">
+                    <div class="${activity.color} p-6 text-white">
+                        <i class="fas ${activity.icon} text-4xl mb-4"></i>
+                        <h3 class="text-xl font-bold">${activity.title}</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-600 dark:text-gray-400 mb-2">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            <span>${activity.date}</span>
+                        </div>
+                        <div class="flex items-center text-gray-600 dark:text-gray-400 mb-4">
+                            <i class="fas fa-map-marker-alt mr-2"></i>
+                            <span>${activity.location}</span>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-300">${activity.description}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Refresh AOS
+            AOS.refresh();
+        }
+        
+        // Initial render
+        renderActivities();
+        
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = activities.filter(activity => 
+                activity.title.toLowerCase().includes(searchTerm) ||
+                activity.location.toLowerCase().includes(searchTerm) ||
+                activity.description.toLowerCase().includes(searchTerm)
+            );
+            renderActivities(filtered);
+        });
+        
+        // Date Filter
+        const dateButtons = document.querySelectorAll('[data-date]');
+        dateButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active state
+                dateButtons.forEach(btn => {
+                    btn.classList.remove('bg-blue-500', 'text-white');
+                    btn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+                });
+                button.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+                button.classList.add('bg-blue-500', 'text-white');
+                
+                // Filter activities
+                const date = button.getAttribute('data-date');
+                if (date === 'all') {
+                    renderActivities();
+                } else {
+                    const filtered = activities.filter(activity => 
+                        activity.tags.includes(date)
+                    );
+                    renderActivities(filtered);
+                }
+            });
+        });
+        
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Hide loader when page is fully loaded
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+        
+        // Navbar scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+        
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const blobs = document.querySelectorAll('.blob');
+            
+            blobs.forEach((blob, index) => {
+                const speed = 0.5 + (index * 0.2);
+                blob.style.transform = `translate(${scrolled * speed * 0.1}px, ${scrolled * speed * 0.2}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
